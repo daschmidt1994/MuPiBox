@@ -718,6 +718,12 @@ def on_disconnect(client, userdata, rc):
     client.publish(mqtt_topic + '/' + mqtt_clientId + '/state', "offline", qos=0)
     client.publish(mqtt_topic + '/' + mqtt_clientId + '/power', "off", qos=0)
     client.publish(mqtt_topic + '/' + mqtt_clientId + '/reboot', "off", qos=0)
+    if rc != 0:
+        print("Unexpected disconnect, trying to reconnect...")
+        try:
+            client.reconnect()
+        except Exception as e:
+            print("Reconnect failed: ", e)
 
 
 def playback_info():
