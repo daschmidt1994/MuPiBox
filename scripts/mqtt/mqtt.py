@@ -714,14 +714,16 @@ def on_connect(client, userdata, flags, rc):
 # Callback function for when the client is disconnected from the broker
 def on_disconnect(client, userdata, rc):
     print("Disconnected from MQTT broker with result code: " + str(rc))
-    # Send "off" message to device topic on disconnect
     client.publish(mqtt_topic + '/' + mqtt_clientId + '/state', "offline", qos=0)
     client.publish(mqtt_topic + '/' + mqtt_clientId + '/power', "off", qos=0)
     client.publish(mqtt_topic + '/' + mqtt_clientId + '/reboot', "off", qos=0)
     if rc != 0:
         print("Unexpected disconnect, trying to reconnect...")
+        import time
+        time.sleep(5)
         try:
             client.reconnect()
+            print("Reconnect successful!")
         except Exception as e:
             print("Reconnect failed: ", e)
 
